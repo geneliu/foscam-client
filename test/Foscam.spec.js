@@ -111,6 +111,30 @@ describe('Foscam', function() {
                 assert.equal(parsed, null);
             });
         });
+
+        it('converts large number strings to numbers', function() {
+            var xml = '<CGI_Result>' +
+              '<mac>999999999999</mac>' +
+              '</CGI_Result>';
+
+            return Foscam.parseResponse(xml).then(function(parsed) {
+              assert.deepEqual(parsed, {
+                  mac: 999999999999
+              });
+            });
+        });
+
+        it('leaves infinity values as strings', function() {
+            var xml = '<CGI_Result>' +
+              '<mac>9E9999999999</mac>' +
+              '</CGI_Result>';
+
+            return Foscam.parseResponse(xml).then(function(parsed) {
+              assert.deepEqual(parsed, {
+                  mac: '9E9999999999'
+              });
+            });
+        });
     });
 
     it('throws when a function is not implemented', function() {
